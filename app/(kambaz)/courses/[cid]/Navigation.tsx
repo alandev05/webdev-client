@@ -1,39 +1,54 @@
+"use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import "../../kambaz.css";
 export default function CourseNavigation({ cid }: { cid: string }) {
+  const pathname = usePathname() ?? "";
+  const base = `/courses/${cid}`;
+  const links = [
+    { label: "Home", href: `${base}/home`, id: "wd-course-home-link" },
+    { label: "Modules", href: `${base}/modules`, id: "wd-course-modules-link" },
+    { label: "Piazza", href: `${base}/piazza`, id: "wd-course-piazza-link" },
+    { label: "Zoom", href: `${base}/zoom`, id: "wd-course-zoom-link" },
+    {
+      label: "Assignments",
+      href: `${base}/assignments`,
+      id: "wd-course-assignments-link",
+    },
+    { label: "Quizzes", href: `${base}/quizzes`, id: "wd-course-quizzes-link" },
+    { label: "Grades", href: `${base}/grades`, id: "wd-course-grades-link" },
+    { label: "People", href: `${base}/people/table`, id: "wd-course-people-link" },
+  ];
   return (
-    <div id="wd-courses-navigation">
-      <Link href={`/courses/${cid}/home`} id="wd-course-home-link">
-        Home
-      </Link>{" "}
-      <br />
-      <Link href={`/courses/${cid}/modules`} id="wd-course-modules-link">
-        Modules
-      </Link>{" "}
-      <br />
-      <Link href={`/courses/${cid}/piazza`} id="wd-course-piazza-link">
-        Piazza
-      </Link>{" "}
-      <br />
-      <Link href={`/courses/${cid}/zoom`} id="wd-course-zoom-link">
-        Zoom
-      </Link>{" "}
-      <br />
-      <Link href={`/courses/${cid}/assignments`} id="wd-course-assignments-link">
-        Assignments
-      </Link>{" "}
-      <br />
-      <Link href={`/courses/${cid}/quizzes`} id="wd-course-quizzes-link">
-        Quizzes
-      </Link>{" "}
-      <br />
-      <Link href={`/courses/${cid}/grades`} id="wd-course-grades-link">
-        Grades
-      </Link>{" "}
-      <br />
-      <Link href={`/courses/${cid}/people/table`} id="wd-course-people-link">
-        People
-      </Link>{" "}
-      <br />
+    <div
+      id="wd-courses-navigation"
+      className="wd list-group rounded-none text-lg"
+    >
+      {links.map((link) => {
+        const active =
+          pathname === link.href || pathname.startsWith(link.href + "/");
+        return (
+          <Link
+            key={link.id}
+            href={link.href}
+            id={link.id}
+            className={
+              active
+                ? "list-group-item active border-0"
+                : "list-group-item border-0 text-red-600"
+            }
+          >
+            {link.label}
+          </Link>
+        );
+      })}
+      <Link
+        href={`${base}/home`}
+        id="wd-course-ai-link"
+        className="list-group-item border-0 text-red-600"
+      >
+        Sample
+      </Link>
     </div>
   );
 }

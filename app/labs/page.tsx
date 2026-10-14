@@ -23,7 +23,9 @@ export default function Labs() {
           <Link href="/labs/lab5">Lab 5: Placeholder</Link>
         </li>
         <li>
-          <Link href="/" id="wd-kambaz-link">Kambaz</Link>
+          <Link href="/" id="wd-kambaz-link">
+            Kambaz
+          </Link>
         </li>
       </ul>
     </div>

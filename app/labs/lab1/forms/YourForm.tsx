@@ -44,10 +44,18 @@ export default function YourForm() {
 
         <label>Class standing:</label>
         <br />
-        <input type="radio" name="your-standing" id="wd-your-standing-freshman" />
+        <input
+          type="radio"
+          name="your-standing"
+          id="wd-your-standing-freshman"
+        />
         <label htmlFor="wd-your-standing-freshman">Freshman</label>
         <br />
-        <input type="radio" name="your-standing" id="wd-your-standing-sophomore" />
+        <input
+          type="radio"
+          name="your-standing"
+          id="wd-your-standing-sophomore"
+        />
         <label htmlFor="wd-your-standing-sophomore">Sophomore</label>
         <br />
         <input type="radio" name="your-standing" id="wd-your-standing-junior" />
@@ -61,7 +69,11 @@ export default function YourForm() {
         />
         <label htmlFor="wd-your-standing-senior">Senior</label>
         <br />
-        <input type="radio" name="your-standing" id="wd-your-standing-graduate" />
+        <input
+          type="radio"
+          name="your-standing"
+          id="wd-your-standing-graduate"
+        />
         <label htmlFor="wd-your-standing-graduate">Graduate</label>
         <br />
         <label>Living situation:</label>
@@ -96,11 +108,11 @@ export default function YourForm() {
         />
         <label htmlFor="wd-your-interest-cpp">C++</label>
         <br />
-        <input 
-            type="checkbox" 
-            name="your-interests" 
-            id="wd-your-interest-swe" 
-            defaultChecked
+        <input
+          type="checkbox"
+          name="your-interests"
+          id="wd-your-interest-swe"
+          defaultChecked
         />
         <label htmlFor="wd-your-interest-swe">Software Engineering</label>
         <br />
@@ -114,11 +126,7 @@ export default function YourForm() {
         <br />
         <label htmlFor="wd-your-topics">Topics to deepen this term: </label>
         <br />
-        <select
-          id="wd-your-topics"
-          multiple
-          defaultValue={["LS", "IR"]}
-        >
+        <select id="wd-your-topics" multiple defaultValue={["LS", "IR"]}>
           <option value="HTML">HTML and CSS</option>
           <option value="REACT">React</option>
           <option value="LS">Language Systems in programming languages</option>

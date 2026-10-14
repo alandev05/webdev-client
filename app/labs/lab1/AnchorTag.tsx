@@ -20,17 +20,17 @@ export default function AnchorTag() {
       </a>
       <br />
       <a href="https://youtube.com" id="wd-your-link">
-        Youtube
+        YouTube
       </a>
+      <br />
       <a
         href="https://github.com/alandev05"
         target="_blank"
         rel="noreferrer"
         id="wd-your-github"
       >
-        Your github
+        Alan's GitHub
       </a>
-
     </>
   );
 }

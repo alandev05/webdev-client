@@ -1,11 +1,29 @@
+"use client";
 import Link from "next/link";
-
+import { usePathname } from "next/navigation";
+import "../kambaz.css";
 export default function AccountNavigation() {
+  const pathname = usePathname() ?? "";
+  const links = [
+    { label: "Signin", href: "/account/signin" },
+    { label: "Signup", href: "/account/signup" },
+    { label: "Profile", href: "/account/profile" },
+  ];
   return (
-    <div id="wd-account-navigation">
-      <Link href="/account/signin">Signin</Link> <br />
-      <Link href="/account/signup">Signup</Link> <br />
-      <Link href="/account/profile">Profile</Link> <br />
+    <div id="wd-account-navigation" className="wd list-group rounded-none text-lg">
+      {links.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className={
+            pathname === link.href
+              ? "list-group-item active border-0"
+              : "list-group-item border-0 text-red-600"
+          }
+        >
+          {link.label}
+        </Link>
+      ))}
     </div>
   );
 }

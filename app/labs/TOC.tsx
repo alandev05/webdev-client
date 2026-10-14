@@ -4,7 +4,9 @@ export default function TOC() {
   return (
     <ul id="wd-toc">
       <li>
-        <Link href="/labs" id="wd-home-link">Home</Link>
+        <Link href="/labs" id="wd-home-link">
+          Home
+        </Link>
       </li>
       <li>
         <Link href="/labs/lab1">Lab 1</Link>
@@ -27,13 +29,14 @@ export default function TOC() {
         </Link>
       </li>
       <li>
-        <Link href="/book/ch1" id="wd-toc-book-link">
+        <a href="https://kambaz.dev/book/ch1" id="wd-toc-book-link">
           Chapter 1
-        </Link>
+        </a>
       </li>
       <li id="wd-toc-personal">
         Alan Nguyen
         <br />
+        <em>Build it, break it, learn from it.</em>
       </li>
     </ul>
   );

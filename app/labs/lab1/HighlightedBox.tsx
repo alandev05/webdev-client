@@ -42,7 +42,7 @@ export default function HighlightedBoxLab() {
       >
         <h4>Callout</h4>
         <p>
-          This box wraps <strong>any</strong>{" "}children — headings, paragraphs,
+          This box wraps <strong>any</strong> children — headings, paragraphs,
           lists, and more.
         </p>
         <ul>
@@ -78,9 +78,9 @@ export default function HighlightedBoxLab() {
       >
         <h4>Alan Nguyen</h4>
         <ul>
-            <li>learn react</li>
-            <li>create a cool website</li>
-            <li>try new things</li>
+          <li>learn react</li>
+          <li>create a cool website</li>
+          <li>try new things</li>
         </ul>
       </HighlightedBox>
     </div>

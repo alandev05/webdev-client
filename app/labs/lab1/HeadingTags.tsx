@@ -8,10 +8,10 @@ export default function HeadingTags() {
       this paragraph is preceded by the heading Heading Tags. The font of the
       section headings are usually larger and bolder than their subsection
       headings. This document uses headings to introduce topics such as HTML
-      Documents, HTML Tags, Heading Tags, etc. HTML heading tags can be used
-      to format plain text so that it renders in a browser as large headings.
-      There are 6 heading tags for different sizes: h1, h2, h3, h4, h5, and
-      h6. Tag h1 is the largest heading and h6 is the smallest heading. A{" "}
+      Documents, HTML Tags, Heading Tags, etc. HTML heading tags can be used to
+      format plain text so that it renders in a browser as large headings. There
+      are 6 heading tags for different sizes: h1, h2, h3, h4, h5, and h6. Tag h1
+      is the largest heading and h6 is the smallest heading. A{" "}
       <span id="wd-inline-span">span</span> sits in this sentence without
       starting a new line.
       <h1>h1</h1>
@@ -23,8 +23,7 @@ export default function HeadingTags() {
       <div id="wd-ai-headings">
         <h4>Lab notes</h4>
         These notes summarize the work done in this lab.
-        <h5>What I built</h5>
-        A small component that shows the six heading sizes.
+        <h5>What I built</h5>A small component that shows the six heading sizes.
         <h6>Next step</h6>
         Add the next exercise below this one.
       </div>
