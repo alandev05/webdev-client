@@ -4,6 +4,17 @@ export default function Labs() {
   return (
     <div id="wd-labs">
       <h1>Labs</h1>
+      <p id="wd-labs-author">
+        Alan Nguyen{" "}
+        <a
+          href="https://github.com/alandev05/webdev-client"
+          id="wd-github"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Github
+        </a>
+      </p>
       <ul>
         <li>
           <Link href="/labs/lab1">Lab 1: HTML Examples</Link>
