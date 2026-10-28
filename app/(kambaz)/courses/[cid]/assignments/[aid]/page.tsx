@@ -1,4 +1,5 @@
 import Link from "next/link";
+import * as db from "../../../../database";
 const field =
   "w-full rounded border border-neutral-300 px-3 py-2 text-sm";
 const label = "mb-1 block text-sm font-medium text-neutral-700";
@@ -8,14 +9,22 @@ export default async function AssignmentEditor({
 }: {
   params: Promise<{ cid: string; aid: string }>;
 }) {
-  const { cid } = await params;
+  const { cid, aid } = await params;
+  const assignment = db.assignments.find((a) => a._id === aid);
   return (
     <div id="wd-assignments-editor" className="max-w-2xl">
       <div className={section}>
         <label htmlFor="wd-name" className={label}>
           Assignment Name
         </label>
-        <input id="wd-name" defaultValue="A1 - ENV + HTML" className={field} />
+        <input
+          id="wd-name"
+          defaultValue={assignment?.title ?? ""}
+          className={field}
+        />
+        <p id="wd-assignment-id" className="mt-1 text-sm text-neutral-600">
+          Assignment id: {aid}
+        </p>
       </div>
       <div className={section}>
         <label htmlFor="wd-description" className={label}>
@@ -25,14 +34,18 @@ export default async function AssignmentEditor({
           id="wd-description"
           rows={4}
           className={field}
-          defaultValue="The assignment is available online Submit a link to the landing page of your Web application running on Vercel."
+          defaultValue={assignment?.description ?? ""}
         />
       </div>
       <div className={section}>
         <label htmlFor="wd-points" className={label}>
           Points
         </label>
-        <input id="wd-points" defaultValue={100} className={field} />
+        <input
+          id="wd-points"
+          defaultValue={assignment?.points ?? 100}
+          className={field}
+        />
       </div>
       <div className={section}>
         <label htmlFor="wd-group" className={label}>
@@ -124,7 +137,7 @@ export default async function AssignmentEditor({
           <input
             type="date"
             id="wd-due-date"
-            defaultValue="2024-05-13"
+            defaultValue={assignment?.due}
             className={field}
           />
         </div>
@@ -136,7 +149,7 @@ export default async function AssignmentEditor({
             <input
               type="date"
               id="wd-available-from"
-              defaultValue="2024-05-06"
+              defaultValue={assignment?.available}
               className={field}
             />
           </div>
