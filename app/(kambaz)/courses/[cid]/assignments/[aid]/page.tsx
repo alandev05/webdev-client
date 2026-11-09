@@ -1,16 +1,38 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import * as db from "../../../../database";
+import { useParams, useRouter } from "next/navigation";
+import {
+  emptyAssignment,
+  useAssignmentsStore,
+  type Assignment,
+} from "../../../../store/assignmentsStore";
 const field =
   "w-full rounded border border-neutral-300 px-3 py-2 text-sm";
 const label = "mb-1 block text-sm font-medium text-neutral-700";
 const section = "mb-4";
-export default async function AssignmentEditor({
-  params,
-}: {
-  params: Promise<{ cid: string; aid: string }>;
-}) {
-  const { cid, aid } = await params;
-  const assignment = db.assignments.find((a) => a._id === aid);
+export default function AssignmentEditor() {
+  const params = useParams();
+  const cid = String(params.cid);
+  const aid = String(params.aid);
+  const isNew = aid === "new";
+  const findAssignment = useAssignmentsStore((state) => state.findAssignment);
+  const addAssignment = useAssignmentsStore((state) => state.addAssignment);
+  const updateAssignment = useAssignmentsStore((state) => state.updateAssignment);
+  const router = useRouter();
+  const [assignment, setAssignment] = useState<Assignment>(() => {
+    const existing = isNew ? undefined : findAssignment(aid);
+    return existing && existing.course === cid
+      ? { until: "", ...existing }
+      : emptyAssignment(cid);
+  });
+  const save = () => {
+    const toSave = { ...assignment, course: cid };
+    if (isNew) addAssignment(toSave);
+    else updateAssignment(toSave);
+    router.push(`/courses/${cid}/assignments`);
+  };
   return (
     <div id="wd-assignments-editor" className="max-w-2xl">
       <div className={section}>
@@ -19,11 +41,12 @@ export default async function AssignmentEditor({
         </label>
         <input
           id="wd-name"
-          defaultValue={assignment?.title ?? ""}
+          value={assignment.title}
+          onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}
           className={field}
         />
         <p id="wd-assignment-id" className="mt-1 text-sm text-neutral-600">
-          Assignment id: {aid}
+          Assignment id: {isNew ? "(new)" : aid}
         </p>
       </div>
       <div className={section}>
@@ -34,7 +57,10 @@ export default async function AssignmentEditor({
           id="wd-description"
           rows={4}
           className={field}
-          defaultValue={assignment?.description ?? ""}
+          value={assignment.description}
+          onChange={(e) =>
+            setAssignment({ ...assignment, description: e.target.value })
+          }
         />
       </div>
       <div className={section}>
@@ -43,7 +69,11 @@ export default async function AssignmentEditor({
         </label>
         <input
           id="wd-points"
-          defaultValue={assignment?.points ?? 100}
+          type="number"
+          value={assignment.points}
+          onChange={(e) =>
+            setAssignment({ ...assignment, points: Number(e.target.value) || 0 })
+          }
           className={field}
         />
       </div>
@@ -137,7 +167,8 @@ export default async function AssignmentEditor({
           <input
             type="date"
             id="wd-due-date"
-            defaultValue={assignment?.due}
+            value={assignment.due}
+            onChange={(e) => setAssignment({ ...assignment, due: e.target.value })}
             className={field}
           />
         </div>
@@ -149,7 +180,10 @@ export default async function AssignmentEditor({
             <input
               type="date"
               id="wd-available-from"
-              defaultValue={assignment?.available}
+              value={assignment.available}
+              onChange={(e) =>
+                setAssignment({ ...assignment, available: e.target.value })
+              }
               className={field}
             />
           </div>
@@ -160,7 +194,10 @@ export default async function AssignmentEditor({
             <input
               type="date"
               id="wd-available-until"
-              defaultValue="2024-05-20"
+              value={assignment.until ?? ""}
+              onChange={(e) =>
+                setAssignment({ ...assignment, until: e.target.value })
+              }
               className={field}
             />
           </div>
@@ -181,13 +218,14 @@ export default async function AssignmentEditor({
         >
           Cancel
         </Link>
-        <Link
-          href={`/courses/${cid}/assignments`}
+        <button
+          type="button"
+          onClick={save}
           id="wd-save"
-          className="rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white no-underline"
+          className="rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white"
         >
           Save
-        </Link>
+        </button>
       </div>
     </div>
   );

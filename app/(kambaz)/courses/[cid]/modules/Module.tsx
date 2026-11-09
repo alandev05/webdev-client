@@ -1,17 +1,42 @@
 import type { ReactNode } from "react";
-import GreenCheckmark from "./GreenCheckmark";
+import ModuleControlButtons from "./ModuleControlButtons";
+import {
+  useModulesStore,
+  type CourseModule,
+} from "../../../store/modulesStore";
+
 export default function Module({
-  title,
+  module,
   children,
 }: {
-  title: string;
+  module: CourseModule;
   children?: ReactNode;
 }) {
+  const updateModule = useModulesStore((state) => state.updateModule);
   return (
-    <li className="wd-module mb-5 overflow-hidden border border-neutral-400 p-0 text-xl">
+    <li
+      id={`wd-module-${module._id}`}
+      className="wd-module mb-5 overflow-hidden border border-neutral-400 p-0 text-xl"
+    >
       <div className="wd-title flex items-center justify-between bg-neutral-200 p-3 ps-2">
-        <span>{title}</span>
-        <GreenCheckmark />
+        <span className="min-w-0 flex-1">
+          {module.editing ? (
+            <input
+              className="w-1/2 rounded border border-neutral-300 px-2 py-1 text-base"
+              defaultValue={module.name}
+              onChange={(e) => updateModule({ ...module, name: e.target.value })}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  updateModule({ ...module, editing: false });
+                }
+              }}
+              autoFocus
+            />
+          ) : (
+            module.name
+          )}
+        </span>
+        <ModuleControlButtons moduleId={module._id} />
       </div>
       <ul className="wd-lessons m-0 list-none p-0">{children}</ul>
     </li>

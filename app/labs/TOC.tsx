@@ -11,18 +11,15 @@ const LINKS = [
   { href: "/", id: "wd-kambaz-link", label: "Kambaz", match: () => false },
   { href: "https://kambaz.dev/book/ch1", id: "wd-toc-book-link", label: "Chapter 1", match: () => false },
   { href: "https://kambaz.dev/book/ch3", id: "wd-book-ch3-link", label: "Book Ch3", match: () => false },
+  { href: "https://kambaz.dev/book/ch4", id: "wd-book-ch4-link", label: "Book Ch4", match: () => false },
 ] as const;
-const activeStyle = {
-  backgroundColor: "#2563eb",
-  color: "white",
-  borderRadius: "4px",
-  padding: "2px 8px",
-  textDecoration: "none",
-};
+const pill = "mb-1 inline-block rounded px-2 py-0.5 no-underline";
+const activePill = `${pill} bg-blue-600 text-white`;
+const inactivePill = `${pill} text-blue-600 hover:bg-blue-100`;
 export default function TOC() {
   const pathname = usePathname() ?? "";
   return (
-    <ul id="wd-toc">
+    <ul id="wd-toc" className="m-0 list-none p-0">
       {LINKS.map((link) => {
         const active = link.match(pathname);
         return (
@@ -30,7 +27,7 @@ export default function TOC() {
             <Link
               href={link.href}
               id={link.id}
-              style={active ? activeStyle : undefined}
+              className={active ? activePill : inactivePill}
               aria-current={active ? "page" : undefined}
             >
               {link.label}
