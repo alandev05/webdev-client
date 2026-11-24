@@ -1,9 +1,20 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
-import usersJson from "../database/users.json";
-
-export type User = (typeof usersJson)[number];
+export type User = {
+  _id: string;
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  loginId: string;
+  section: string;
+  lastActivity: string;
+  totalActivity: string;
+  dob?: string;
+};
 
 export const emptyUser: User = {
   _id: "",

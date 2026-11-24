@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import * as client from "../../../client";
 import {
   emptyAssignment,
   useAssignmentsStore,
@@ -27,10 +28,27 @@ export default function AssignmentEditor() {
       ? { until: "", ...existing }
       : emptyAssignment(cid);
   });
-  const save = () => {
+  // Opened directly (e.g. after a refresh): the cache is empty, so ask the server.
+  useEffect(() => {
+    if (isNew || findAssignment(aid)) return;
+    client
+      .findAssignmentById(aid)
+      .then((existing) => {
+        if (existing.course === cid) setAssignment({ until: "", ...existing });
+      })
+      .catch(() => {});
+  }, [aid, cid, isNew, findAssignment]);
+  const save = async () => {
     const toSave = { ...assignment, course: cid };
-    if (isNew) addAssignment(toSave);
-    else updateAssignment(toSave);
+    if (isNew) {
+      const { _id: _unused, ...fields } = toSave;
+      void _unused;
+      const created = await client.createAssignmentForCourse(cid, fields);
+      addAssignment(created);
+    } else {
+      const saved = await client.updateAssignment(toSave);
+      updateAssignment(saved);
+    }
     router.push(`/courses/${cid}/assignments`);
   };
   return (

@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAccountContext, type User } from "../AccountContext";
-import { useUsersStore } from "../../store/usersStore";
+import * as client from "../client";
 
 const field = "mb-2 w-full rounded border border-neutral-300 px-3 py-2";
 
 export default function Profile() {
   const [profile, setProfile] = useState<User | null>(null);
   const { currentUser, setCurrentUser } = useAccountContext();
-  const updateUser = useUsersStore((state) => state.updateUser);
   const router = useRouter();
 
   useEffect(() => {
@@ -23,13 +22,14 @@ export default function Profile() {
     return () => cancelAnimationFrame(frame);
   }, [currentUser, router]);
 
-  const update = () => {
+  const updateProfile = async () => {
     if (!profile) return;
-    updateUser(profile);
-    setCurrentUser(profile);
+    const user = await client.updateUser(profile);
+    setCurrentUser(user);
   };
 
-  const signout = () => {
+  const signout = async () => {
+    await client.signout();
     setCurrentUser(null);
     router.push("/account/signin");
   };
@@ -89,7 +89,7 @@ export default function Profile() {
       </select>
       <button
         type="button"
-        onClick={update}
+        onClick={updateProfile}
         id="wd-update-profile-btn"
         className="mb-2 block w-full rounded bg-blue-600 px-3 py-2 text-white"
       >

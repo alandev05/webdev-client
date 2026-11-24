@@ -5,8 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { FaAlignJustify } from "react-icons/fa6";
 import CourseNavigation from "./Navigation";
 import Breadcrumb from "./Breadcrumb";
-import { useCoursesStore } from "../../store/coursesStore";
-import { useEnrollmentsStore } from "../../store/enrollmentsStore";
+import * as client from "../client";
+import { useCoursesStore, type Course } from "../../store/coursesStore";
 import { useAccountContext } from "../../account/AccountContext";
 
 export default function CoursesLayout({
@@ -16,22 +16,42 @@ export default function CoursesLayout({
 }>) {
   const { cid } = useParams();
   const courseId = typeof cid === "string" ? cid : "";
-  const courses = useCoursesStore((state) => state.courses);
-  const course = courses.find((c) => c._id === courseId);
+  const cached = useCoursesStore((state) =>
+    state.courses.find((c) => c._id === courseId),
+  );
+  const [fetched, setFetched] = useState<Course | undefined>(undefined);
+  const course = cached ?? fetched;
   const [showCourseNav, setShowCourseNav] = useState(true);
   const { currentUser } = useAccountContext();
-  const enrolled = useEnrollmentsStore((state) =>
-    currentUser
-      ? state.enrollments.some(
-          (e) => e.user === currentUser._id && e.course === courseId,
-        )
-      : true,
-  );
+  // null = still checking with the server
+  const [enrolled, setEnrolled] = useState<boolean | null>(null);
   const router = useRouter();
+
+  // After a refresh the cache is empty, so read the course from the server.
+  useEffect(() => {
+    if (cached) return;
+    client.findCourseById(courseId).then(setFetched).catch(() => {});
+  }, [cached, courseId]);
 
   // Route protection: a signed-in user may only open courses they are enrolled in.
   useEffect(() => {
-    if (!enrolled) router.push("/dashboard");
+    const check = async () => {
+      if (!currentUser) {
+        setEnrolled(true);
+        return;
+      }
+      try {
+        const enrollments = await client.findMyEnrollments();
+        setEnrolled(enrollments.some((e) => e.course === courseId));
+      } catch {
+        setEnrolled(false);
+      }
+    };
+    check();
+  }, [currentUser, courseId]);
+
+  useEffect(() => {
+    if (enrolled === false) router.push("/dashboard");
   }, [enrolled, router]);
 
   if (!enrolled) return null;

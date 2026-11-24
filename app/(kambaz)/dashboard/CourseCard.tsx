@@ -1,20 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useCoursesStore, type Course } from "../store/coursesStore";
+import type { Course } from "../store/coursesStore";
 
 export default function CourseCard({
   course,
   onEdit,
+  onDelete,
   enrolled,
   onToggleEnrollment,
 }: {
   course: Course;
   onEdit: () => void;
+  onDelete: () => void;
   // undefined when nobody is signed in (no enroll button shown)
   enrolled?: boolean;
   onToggleEnrollment: () => void;
 }) {
-  const deleteCourse = useCoursesStore((state) => state.deleteCourse);
   return (
     <div className="wd-dashboard-course w-[300px] max-w-full overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm">
       <Link
@@ -59,7 +60,7 @@ export default function CourseCard({
               className="inline-flex items-center justify-center rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white"
               onClick={(event) => {
                 event.preventDefault();
-                deleteCourse(course._id);
+                onDelete();
               }}
             >
               Delete

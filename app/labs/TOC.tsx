@@ -12,6 +12,7 @@ const LINKS = [
   { href: "https://kambaz.dev/book/ch1", id: "wd-toc-book-link", label: "Chapter 1", match: () => false },
   { href: "https://kambaz.dev/book/ch3", id: "wd-book-ch3-link", label: "Book Ch3", match: () => false },
   { href: "https://kambaz.dev/book/ch4", id: "wd-book-ch4-link", label: "Book Ch4", match: () => false },
+  { href: "https://kambaz.dev/book/ch5", id: "wd-book-ch5-link", label: "Book Ch5", match: () => false },
 ] as const;
 const pill = "mb-1 inline-block rounded px-2 py-0.5 no-underline";
 const activePill = `${pill} bg-blue-600 text-white`;

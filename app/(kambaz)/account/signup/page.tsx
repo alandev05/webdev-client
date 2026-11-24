@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { emptyUser, useAccountContext } from "../AccountContext";
-import { useUsersStore } from "../../store/usersStore";
+import * as client from "../client";
 
 const field = "mb-2 w-full rounded border border-neutral-300 px-3 py-2";
 
@@ -12,27 +13,43 @@ export default function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { setCurrentUser } = useAccountContext();
-  const addUser = useUsersStore((state) => state.addUser);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  const signup = () => {
+  const signup = async () => {
     if (!username || !password) return;
-    const user = {
-      ...emptyUser,
-      _id: crypto.randomUUID(),
-      username,
-      password,
-      role: "STUDENT",
-    };
-    // keep the new user in the users store so they can sign out and sign back in
-    addUser(user);
-    setCurrentUser(user);
-    router.push("/account/profile");
+    try {
+      // the server assigns the _id and stores the new user in the session
+      const { _id: _unused, ...fields } = emptyUser;
+      void _unused;
+      const current = await client.signup({
+        ...fields,
+        username,
+        password,
+        role: "STUDENT",
+      });
+      setCurrentUser(current);
+      router.push("/account/profile");
+    } catch (e) {
+      setError(
+        axios.isAxiosError(e)
+          ? (e.response?.data?.message ?? e.message)
+          : String(e),
+      );
+    }
   };
 
   return (
     <div id="wd-signup-screen" className="max-w-sm">
       <h3 className="mb-3 text-2xl font-semibold">Sign up</h3>
+      {error && (
+        <p
+          id="wd-signup-error"
+          className="mb-2 rounded bg-red-100 px-3 py-2 text-red-800"
+        >
+          {error}
+        </p>
+      )}
       <input
         id="wd-username"
         placeholder="username"

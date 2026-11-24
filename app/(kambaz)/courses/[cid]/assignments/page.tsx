@@ -1,20 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import AssignmentItem from "./AssignmentItem";
 import DeleteAssignmentDialog from "./DeleteAssignmentDialog";
+import * as client from "../../client";
 import { useAssignmentsStore } from "../../../store/assignmentsStore";
 import { useAccountContext } from "../../../account/AccountContext";
 
 export default function Assignments() {
   const { cid } = useParams();
   const courseId = typeof cid === "string" ? cid : "";
+  // The server filters assignments by course; the store caches that list.
   const allAssignments = useAssignmentsStore((state) => state.assignments);
+  const setAssignments = useAssignmentsStore((state) => state.setAssignments);
   const deleteAssignment = useAssignmentsStore((state) => state.deleteAssignment);
   const assignments = allAssignments.filter((a) => a.course === courseId);
+  useEffect(() => {
+    const load = async () => {
+      setAssignments(await client.findAssignmentsForCourse(courseId));
+    };
+    load();
+  }, [courseId, setAssignments]);
+  const onDeleteAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(assignmentId);
+    deleteAssignment(assignmentId);
+  };
   const { currentUser } = useAccountContext();
   // Students can only view; everyone else (faculty, TA, admin, or not signed in) can edit
   const canEdit = currentUser?.role !== "STUDENT";
@@ -80,7 +93,7 @@ export default function Assignments() {
         title={pendingTitle ?? ""}
         onCancel={() => setPendingDelete(null)}
         onConfirm={() => {
-          if (pendingDelete) deleteAssignment(pendingDelete);
+          if (pendingDelete) onDeleteAssignment(pendingDelete);
           setPendingDelete(null);
         }}
       />

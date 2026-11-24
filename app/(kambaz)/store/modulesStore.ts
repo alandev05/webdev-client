@@ -1,7 +1,6 @@
 "use client";
 
 import { create } from "zustand";
-import modulesJson from "../database/modules.json";
 
 export type Lesson = {
   _id: string;
@@ -19,28 +18,22 @@ export type CourseModule = {
   editing?: boolean;
 };
 
+// Client cache of the modules the server returned for the open course.
 type ModulesStore = {
   modules: CourseModule[];
-  addModule: (module: { name: string; course: string }) => void;
+  setModules: (modules: CourseModule[]) => void;
+  addModule: (module: CourseModule) => void;
   deleteModule: (moduleId: string) => void;
   updateModule: (module: CourseModule) => void;
   editModule: (moduleId: string) => void;
 };
 
 export const useModulesStore = create<ModulesStore>((set) => ({
-  modules: modulesJson as CourseModule[],
+  modules: [],
+  setModules: (modules) => set({ modules }),
   addModule: (module) =>
     set((state) => ({
-      modules: [
-        ...state.modules,
-        {
-          _id: crypto.randomUUID(),
-          name: module.name,
-          description: "",
-          course: module.course,
-          lessons: [],
-        },
-      ],
+      modules: [...state.modules, module],
     })),
   deleteModule: (moduleId) =>
     set((state) => ({

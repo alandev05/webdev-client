@@ -7,11 +7,16 @@ import {
 
 export default function Module({
   module,
+  onUpdateModule,
+  onRemoveModule,
   children,
 }: {
   module: CourseModule;
+  onUpdateModule: (module: CourseModule) => void;
+  onRemoveModule: (moduleId: string) => void;
   children?: ReactNode;
 }) {
+  // typing only updates the local cache; Enter saves to the server
   const updateModule = useModulesStore((state) => state.updateModule);
   return (
     <li
@@ -27,7 +32,11 @@ export default function Module({
               onChange={(e) => updateModule({ ...module, name: e.target.value })}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  updateModule({ ...module, editing: false });
+                  onUpdateModule({
+                    ...module,
+                    name: e.currentTarget.value,
+                    editing: false,
+                  });
                 }
               }}
               autoFocus
@@ -36,7 +45,10 @@ export default function Module({
             module.name
           )}
         </span>
-        <ModuleControlButtons moduleId={module._id} />
+        <ModuleControlButtons
+          moduleId={module._id}
+          deleteModule={onRemoveModule}
+        />
       </div>
       <ul className="wd-lessons m-0 list-none p-0">{children}</ul>
     </li>
